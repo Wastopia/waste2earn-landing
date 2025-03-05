@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* kent */
 @font-face {
   font-family: 'Futura-PT-Book';
   src: url('/font/FuturaPTBook.otf');
