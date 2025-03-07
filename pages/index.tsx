@@ -241,47 +241,47 @@ const handleLogin2 = () => {
           <p>{`Subscribe to Waste2Earn and we'll send major Waste2Earn updates straight to your inbox.`}</p>
           <iframe src="https://waste2earn.substack.com/embed" width="100%" frameBorder="0" scrolling="no"></iframe>
         </div>
-        
-        {/*Partners*/}
-        <div className="space-y-4 p-4 rounded-lg">
-                <h2 className="text-3xl font-normal text-start">Partners</h2>
-                <div className="flex justify-center mt-12">
+          
+          {/* Partners */}
+          <div className="space-y-4 p-4 rounded-lg">
+              <h2 className="text-3xl font-normal text-start">Partners</h2>
+              <div className="flex justify-center mt-12">
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-                    <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
-                      <a href="https://v3.tailwindcss.com/docs/text-color" target="_blank" rel="Logo number 1" className="block w-full h-full">
-                        <img src="./Picture/Pict1.jpg" alt="Picture 1" className="w-full h-full object-cover"/>
-                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
-                          Logo 1
-                        </div>
-                      </a>
-                    </div>
-                    <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
-                      <a href="/" target="_blank" rel="Logo number 2" className="block w-full h-full">
-                        <img src="./Picture/Pict2.jpg" alt="Picture 2" className="w-full h-full object-cover"/>
-                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
-                          Logo 2
-                        </div>
-                      </a>
-                    </div>
-                    <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
-                      <a href="/" target="_blank" rel="Logo number 3" className="block w-full h-full">
-                        <img src="./Picture/Pict3.jpg" alt="Picture 3" className="w-full h-full object-cover"/>
-                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
-                          Logo 3
-                        </div>
-                      </a>
-                    </div>
-                    <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
-                      <a href="/" target="_blank" rel="Logo number 4" className="block w-full h-full">
-                        <img src="./Picture/Pict4.jpg" alt="Picture 4" className="w-full h-full object-cover"/>
-                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
-                          Logo 4
-                        </div>
-                      </a>
-                    </div>
+                      <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
+                          <a href="https://v3.tailwindcss.com/docs/text-color" target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                              <img src="./Picture/Pict1.jpg" alt="Picture 1" className="w-full h-full object-cover"/>
+                              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
+                                  Logo 1
+                              </div>
+                          </a>
+                      </div>
+                      <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
+                          <a href="/" target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                              <img src="./Picture/Pict2.jpg" alt="Picture 2" className="w-full h-full object-cover"/>
+                              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
+                                  Logo 2
+                              </div>
+                          </a>
+                      </div>
+                      <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
+                          <a href="/" target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                              <img src="./Picture/Pict3.jpg" alt="Picture 3" className="w-full h-full object-cover"/>
+                              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
+                                  Logo 3
+                              </div>
+                          </a>
+                      </div>
+                      <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
+                          <a href="/" target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                              <img src="./Picture/Pict4.jpg" alt="Picture 4" className="w-full h-full object-cover"/>
+                              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
+                                  Logo 4
+                              </div>
+                          </a>
+                      </div>
                   </div>
-                </div>
               </div>
+          </div>
         
       </Wrapper>
     </>
