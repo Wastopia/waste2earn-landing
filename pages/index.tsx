@@ -10,6 +10,7 @@ import {getSortedPostsData, PostData} from "../lib/posts";
 import { COPY, IMAGES, SITE_URL } from '../lib/constants';
 import {loadActiveProposals, Proposal} from '../lib/snapshot';
 import supabase from '../supabase/supabase';
+//latest sign up
 
 type BlogProps = {
   allPostsData: PostData[];
