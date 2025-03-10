@@ -44,8 +44,8 @@ const [showSignUp, setShowSignUp] = useState(false)
 const show = () => setShowSignUp(true)
 const hide = () => setShowSignUp(false)
 
-const [formData, setFormData] = useState({ email: '' })
-const [errors, setErrors] = useState({ email: '', signupForm: '' })
+const [formData, setFormData] = useState({ email: '', password: '', confirmpassword: '' })
+const [errors, setErrors] = useState({ email: '', password: '', confirmpassword: '', signupForm: '' })
 
 const [isSignupFormDefault, setIsSignupFormDefault] = useState(false)
 const [signupFormError, setSignupFormError] = useState(false)
@@ -64,6 +64,30 @@ const validateEmail = (email: string): string => {
   return ''
 }
 
+const validatePassword = (password: string): string => {
+
+  if (!password.trim()) return ''
+
+  if (/\s/.test(password)) {
+      return 'Password should not contain spaces.'
+  } else if (password.length < 6) {
+      return 'Weak Password. Please enter at least 6 characters.'
+  }
+  return ''
+
+}
+
+const validateConfirmPassword = (password: string, confirmpassword: string): string => {
+
+  if (!confirmpassword.trim()) return ''
+
+  if (password !== confirmpassword) {
+      return 'Your passwords didn’t match, please try again!'
+  }
+  return ''
+
+}
+
 const handleSignupInputChange = (field: string, value: string) => {
 
   setIsSignupFormDefault(true)
@@ -75,6 +99,17 @@ const handleSignupInputChange = (field: string, value: string) => {
         ...prev,
         email: validateEmail(value,)
       }))
+  } else if (field === 'password') {
+      setErrors((prev) => ({
+      ...prev,
+      password : validatePassword(value),
+      confirmpassword: validateConfirmPassword(value, formData.confirmpassword)
+    }))
+  } else if (field === 'confirmpassword') {
+      setErrors((prev) => ({
+      ...prev,
+      confirmpassword: validateConfirmPassword(formData.password, value)
+    }))
   }
 
 }
@@ -85,10 +120,14 @@ useEffect(() => {
   return
 
   const isSignupFormEmpty =
-      !(formData.email?.trim())
+      !(formData.email?.trim()) ||
+      !(formData.password?.trim()) ||
+      !(formData.confirmpassword?.trim())
 
   const hasSignupErrors =
-      errors.email
+      errors.email ||
+      errors.password ||
+      errors.confirmpassword
 
   const signupFormError = isSignupFormEmpty
       ? 'There are empty fields, please adjust them properly.'
@@ -131,6 +170,7 @@ const handleGoogleSignUp = async () => {
       }));
       setIsGoogleSigningUp(false)
     }
+
   } catch (error) {
     setErrors((prev) => ({
       ...prev,
@@ -145,10 +185,14 @@ const handleSignupSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault()
 
   const isSignupFormEmpty =
-      !(formData.email?.trim())
+      !(formData.email?.trim()) ||
+      !(formData.password?.trim()) ||
+      !(formData.confirmpassword?.trim())
 
   const hasSignupErrors =
-      errors.email
+      errors.email ||
+      errors.password ||
+      errors.confirmpassword
 
   const signupFormError = isSignupFormEmpty
       ? 'There are empty fields, please adjust them properly.'
@@ -165,6 +209,58 @@ const handleSignupSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   if (!signupFormError) {
 
       setIsSigningUp(true)
+
+      try {
+
+        const { data: existingEmail, error: emailError } = await supabase
+            .from('users')
+            .select('email')
+            .eq('email', formData.email)
+  
+        if (existingEmail && existingEmail.length > 0) {
+            setErrors((prev) => ({
+              ...prev,
+              signupForm: "Email is unavailable. Please choose another one.",
+            }))
+            setIsSigningUp(false)
+            return
+        }
+
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password
+      })
+
+      if (authError) {
+        setErrors((prev) => ({
+            ...prev,
+            signupForm:  'An unexpected error has occurred. Please try again later.'
+        }))
+      }
+      
+      if (authData) {
+
+        setSignupSuccess("Your information has been created successfully.")
+
+        setIsSignupFormDefault(false)
+        setIsSigningUp(false)
+
+        setFormData({
+          firstname: '',
+          lastname: '',
+          email: '',
+          password: '',
+          confirmpassword: ''
+        })
+      }
+        
+    } catch (error) {
+      setErrors((prev) => ({
+        ...prev,
+        signupForm: "An unexpected error occurred. Please try again later.",
+      }))
+      setIsSigningUp(false)
+    }
   
   }
 
@@ -264,20 +360,31 @@ const handleLogin2 = () => {
             <form className="relative w-[320px] md:w-[420px] bg-[#dbd9d9] p-6 rounded-lg shadow-md"  onSubmit={handleSignupSubmit} noValidate>
 
               <div className="absolute flex items-center justify-center bg-[#e85151] top-3 right-3 text-white-500 rounded-lg shadow-md hover:bg-[#bf3737] text-4xl font-light cursor-pointer w-8 h-8 transition-all duration-300 ease-in-out" onClick={hide}>&times;</div>
-              <h2 className="text-3xl mb-6 text-zinc-600 text-center">Sign Up on Waste2Earn</h2>
+              <h2 className="text-3xl mb-4 text-zinc-600 text-center">Sign Up on Waste2Earn</h2>
 
               {errors.email && (<span><p className="text-red-700">{errors.email}</p></span>)}
               <input type="email" name="email" 
-              value={formData.email ?? ''} onChange={(e) => handleSignupInputChange('email', e.target.value)} placeholder="Email" className="w-full font-extralight text-neutral-600 text-lg p-2 mb-5 border rounded" />
+              value={formData.email ?? ''} onChange={(e) => handleSignupInputChange('email', e.target.value)} placeholder="Email" className="w-full font-extralight text-neutral-600 text-lg p-2 mb-4 border rounded" />
 
-              <div onClick={handleGoogleSignUp} className="w-full h=[40px] flex items-center justify-center bg-[#04588f] mb-6 text-white text-1xl p-2 rounded cursor-pointer hover:bg-[#003354] transition-all duration-300 ease-in-out">
+              <div>
+              {errors.password && (<span><p className="text-red-700">{errors.password}</p></span>)}
+              <input id="hs-toggle-password" type="password" name="password" 
+              value={formData.password ?? ''} onChange={(e) => handleSignupInputChange('password', e.target.value)} placeholder="Password" className="w-full font-extralight text-neutral-600 text-lg p-2 mb-4 border rounded" />
+              </div>
+
+              {errors.confirmpassword && (<span><p className="text-red-700">{errors.confirmpassword}</p></span>)}
+
+              <input type="password" name="confirmpassword" 
+              value={formData.confirmpassword ?? ''} onChange={(e) => handleSignupInputChange('confirmpassword', e.target.value)} placeholder="Confirm Password" className="w-full font-extralight text-neutral-600 text-lg p-2 mb-4 border rounded" />
+
+              <div onClick={handleGoogleSignUp} className="w-full h=[40px] flex items-center justify-center bg-[#04588f] mb-4 text-white text-1xl p-2 rounded cursor-pointer hover:bg-[#003354] transition-all duration-300 ease-in-out">
                   <img className="absolute w-6 h-6 left-10" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
                   <span> {isGoogleSigningUp ? ('Authenticating') : ('Sign Up with Google')}</span>
               </div>
 
-              {signupSuccess && (<span><p className="text-red-700">{signupSuccess}</p></span>)}
+              {signupSuccess && (<span><p className="text-blue-700">{signupSuccess}</p></span>)}
               {errors.signupForm && (<span><p className="text-red-700">{errors.signupForm}</p></span>)}
-              <button type="submit" className="w-full bg-[#067ac7] mb-6 text-white text-2xl p-2 rounded hover:bg-[#015891] transition-all duration-300 ease-in-out">{isSigningUp ? ('Signing Up') : ('Sign Up')}</button>
+              <button type="submit" className="w-full bg-[#067ac7] mb-4 text-white text-2xl p-2 rounded hover:bg-[#015891] transition-all duration-300 ease-in-out">{isSigningUp ? ('Signing Up') : ('Sign Up')}</button>
             
             </form>
 
