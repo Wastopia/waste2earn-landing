@@ -730,9 +730,12 @@ const handleLogin2 = () => {
       <div style={signoutForm}>
         <div className="flex items-center justify-center min-h-screen transition-all duration-300 ease-in-out">
 
-          <form className="relative w-[380px] h-[300px] bg-[#dbd9d9] p-6 rounded-lg shadow-md" noValidate>
+        <form className="relative w-[380px] h-[200px] bg-[#dbd9d9] p-6 rounded-lg shadow-md flex flex-col items-center justify-center" noValidate>
+
           <div className="absolute flex items-center justify-center bg-[#e85151] top-3 right-3 text-white-500 rounded-lg shadow-md hover:bg-[#bf3737] text-4xl font-light cursor-pointer w-8 h-8 transition-all duration-300 ease-in-out" onClick={hidesignOutForm}>&times;</div>
-            <h2 className="text-3xl flex items-center justify-center text-zinc-600 text-center">Are you sure you want to Sign Out?</h2>
+            <h2 className="text-2xl mt-17 text-zinc-600 text-center">Are you sure you want to Sign Out?</h2>
+
+            <button type='button' className='mt-5 w-[100px] pt-2 pb-2 bg-[#913030] text-white rounded-lg cursor-pointer text-1xl text-center shadow-xs transition-all duration-500 hover:bg-[#662222]'>Sign Out</button>
           </form> 
 
         </div>
