@@ -65,6 +65,7 @@ const [signupFormError, setSignupFormError] = useState(false)
 const [signupSuccess, setSignupSuccess] = useState(false)
 const [isSigningUp, setIsSigningUp] = useState(false)
 const [isGoogleSigningUp, setIsGoogleSigningUp] = useState(false)
+const [isSigningOut, setIsSigningOut] = useState(false)
 
 const validateEmail = (email: string): string => {
   if (!email.trim()) return ''
@@ -406,6 +407,31 @@ const handleLogin2 = () => {
   window.open(loginUrl, "_blank");
 };
 
+const handleSignOut = async () => {
+
+  setIsSigningOut(true)
+
+  try {
+
+      const { data: { session: supabaseSession } } = await supabase.auth.getSession()
+      
+      await supabase.auth.signOut()
+          
+      sessionStorage.clear()
+      localStorage.clear()
+          
+      window.location.reload()
+
+  } catch (error) {
+      console.error(error)
+  } finally {
+      setTimeout(() => 
+          setIsSigningOut(false), 480
+      )    
+  }
+
+}
+
   const {
     loading,
     user,
@@ -735,7 +761,7 @@ const handleLogin2 = () => {
           <div className="absolute flex items-center justify-center bg-[#e85151] top-3 right-3 text-white-500 rounded-lg shadow-md hover:bg-[#bf3737] text-4xl font-light cursor-pointer w-8 h-8 transition-all duration-300 ease-in-out" onClick={hidesignOutForm}>&times;</div>
             <h2 className="text-2xl mt-17 text-zinc-600 text-center">Are you sure you want to Sign Out?</h2>
 
-            <button type='button' className='mt-5 w-[100px] pt-2 pb-2 bg-[#913030] text-white rounded-lg cursor-pointer text-1xl text-center shadow-xs transition-all duration-500 hover:bg-[#662222]'>Sign Out</button>
+            <button onClick={handleSignOut} type='button' className='mt-5 w-[100px] pt-2 pb-2 bg-[#913030] text-white rounded-lg cursor-pointer text-1xl text-center shadow-xs transition-all duration-500 hover:bg-[#662222]'>{isSigningOut ? ('Signing Out') : ('Sign Out')}</button>
           </form> 
 
         </div>
