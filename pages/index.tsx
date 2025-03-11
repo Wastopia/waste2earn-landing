@@ -281,6 +281,29 @@ const handleSignupSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
 }
 
+const handleSignOut = async () => {
+
+  setIsSigningOut(true)
+
+  try {
+      
+      await supabase.auth.signOut()
+          
+      sessionStorage.clear()
+      localStorage.clear()
+          
+      window.location.reload()
+
+  } catch (error) {
+      console.error(error)
+  } finally {
+      setTimeout(() => 
+          setIsSigningOut(false), 480
+      )    
+  }
+
+}
+
 const overlayStyle: React.CSSProperties = {
   position: "fixed",
   top: 0,
@@ -406,29 +429,6 @@ const handleLogin2 = () => {
   
   window.open(loginUrl, "_blank");
 };
-
-const handleSignOut = async () => {
-
-  setIsSigningOut(true)
-
-  try {
-      
-      await supabase.auth.signOut()
-          
-      sessionStorage.clear()
-      localStorage.clear()
-          
-      window.location.reload()
-
-  } catch (error) {
-      console.error(error)
-  } finally {
-      setTimeout(() => 
-          setIsSigningOut(false), 480
-      )    
-  }
-
-}
 
   const {
     loading,
