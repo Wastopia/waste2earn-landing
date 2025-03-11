@@ -294,15 +294,11 @@ const handleSignOut = async () => {
           
       window.location.reload()
 
-      setTimeout(() => 
-        setIsSigningOut(false), 480
-    )  
-
   } catch (error) {
       console.error(error)
   } finally {
       setTimeout(() => 
-          setIsSigningOut(false), 480
+          setIsSigningOut(false), 1000
       )    
   }
 
