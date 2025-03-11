@@ -11,7 +11,6 @@ import { COPY, IMAGES, SITE_URL } from '../lib/constants';
 import {loadActiveProposals, Proposal} from '../lib/snapshot';
 import supabase from '../supabase/supabase';
 import supabaseSession from '../supabase/supabaseSession';
-//latest sign up
 
 type BlogProps = {
   allPostsData: PostData[];
@@ -303,6 +302,8 @@ const handleSignOut = async () => {
   }
 
 }
+
+//latest signout push
 
 const overlayStyle: React.CSSProperties = {
   position: "fixed",
