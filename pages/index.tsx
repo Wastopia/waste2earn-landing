@@ -412,8 +412,6 @@ const handleSignOut = async () => {
   setIsSigningOut(true)
 
   try {
-
-      const { data: { session: supabaseSession } } = await supabase.auth.getSession()
       
       await supabase.auth.signOut()
           
