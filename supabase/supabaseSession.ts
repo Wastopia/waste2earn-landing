@@ -9,7 +9,7 @@ function supabaseSession() {
 
     useEffect(() => {
         
-        let subscription
+        let subscription: any
     
         const session = async () => {
             
@@ -52,6 +52,25 @@ function supabaseSession() {
                     
                 }
 
+                const auth_id = sessionData.user.id
+                const filter = `auth_id=eq.${auth_id}`
+    
+                subscription = supabase
+                    .channel('public:users')
+                    .on(
+                        'postgres_changes',
+                        {
+                            event: '*',
+                            schema: 'public',
+                            table: 'users',
+                            filter
+                        },
+                        (payload) => {
+                            setUserDetails((prev) => ({ ...prev, ...payload.new }))
+                        }
+                    )
+                    .subscribe()
+
             } catch (error) {
                 console.log('error')
             } finally {
@@ -62,6 +81,13 @@ function supabaseSession() {
         }
     
         session()
+
+        return () => {
+            if (subscription) {
+                subscription.unsubscribe()
+            }
+        }
+
     }, [])
 
     return {

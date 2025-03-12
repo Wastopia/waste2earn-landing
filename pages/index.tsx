@@ -40,6 +40,13 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }) => {
   window.open(loginUrl, "_blank");
 };
 
+const {
+  loading,
+  setLoading,
+  user,
+  userDetails
+} = supabaseSession()
+
 const [showSignUp, setShowSignUp] = useState(false)
 const show = () => setShowSignUp(true)
 const hide = () => setShowSignUp(false)
@@ -59,12 +66,20 @@ const hidesignOutForm = () => setShowSignOutForm(false)
 const [formData, setFormData] = useState({ email: '', password: '', confirmpassword: '' })
 const [errors, setErrors] = useState({ email: '', password: '', confirmpassword: '', signupForm: '' })
 
+const [updateData, setUpdateData] = useState({ firstname: '', lastname: '', role: '' })
+const [updateErrors, setUpdateErrors] = useState({ firstname: '', lastname: '', role: '', updateForm: '' })
+
 const [isSignupFormDefault, setIsSignupFormDefault] = useState(false)
 const [signupFormError, setSignupFormError] = useState(false)
 const [signupSuccess, setSignupSuccess] = useState(false)
 const [isSigningUp, setIsSigningUp] = useState(false)
 const [isGoogleSigningUp, setIsGoogleSigningUp] = useState(false)
 const [isSigningOut, setIsSigningOut] = useState(false)
+
+const [isUpdateFormDefault, setIsUpdateFormDefault] = useState(false)
+const [updateFormError, setUpdateFormError] = useState(false)
+const [updateSuccess, setUpdateSuccess] = useState(false)
+const [isUpdating, setIsUpdating] = useState(false)
 
 const validateEmail = (email: string): string => {
   if (!email.trim()) return ''
@@ -101,6 +116,31 @@ const validateConfirmPassword = (password: string, confirmpassword: string): str
 
 }
 
+const validateFirstname = (firstname: string): string => {
+  if (!firstname.trim()) return ''
+
+  if (/[^a-zA-Z ]/.test(firstname)) {
+      return 'Invalid Firstname! Please use letters only.'
+  }
+  return ''
+}
+
+const validateLastname = (lastname: string): string => {
+  if (!lastname.trim()) return ''
+
+  if (/[^a-zA-Z ]/.test(lastname)) {
+      return 'Invalid Lastname! Please use letters only.'
+  }
+  return ''
+}
+
+const validateRole = (role: string): string => {
+  if (!role || !role.trim()) {
+      return 'Invalid Role. Please select a role.'
+  }
+  return ''
+}
+
 const handleSignupInputChange = (field: string, value: string) => {
 
   setIsSignupFormDefault(true)
@@ -127,6 +167,137 @@ const handleSignupInputChange = (field: string, value: string) => {
 
 }
 
+const capitalization = (str: string) => {
+  return str.toLowerCase().replace(/(^|\s)\S/g, (letter: string) => letter.toUpperCase())
+}
+
+const handleUpdateInputChange = (field: string, value: string) => {
+
+  setIsUpdateFormDefault(true)
+
+      if (field === 'firstname' || field === 'lastname') {
+          value = capitalization(value)
+      }
+
+      setUpdateData((prev) => ({ ...prev, [field]: value }))
+
+      if (field === 'firstname') {
+          setUpdateErrors((prev) => ({
+              ...prev, firstname: validateFirstname(value)
+          }))
+      } else if (field === 'lastname') {
+          setUpdateErrors((prev) => ({
+              ...prev, lastname: validateLastname(value) }))
+      } else if (field === 'role') {
+        setUpdateErrors((prev) => ({
+            ...prev, role: validateRole(value) }))
+    }
+
+}
+
+useEffect(() => {
+
+  if (!isUpdateFormDefault || updateSuccess) 
+  return
+
+  const isUpdateFormEmpty =
+      !(updateData.firstname?.trim()) ||
+      !(updateData.lastname?.trim()) ||
+      !(updateData.role?.trim())
+
+  const hasUpdateErrors =
+      updateErrors.firstname ||
+      updateErrors.lastname ||
+      updateErrors.role
+
+
+  const updateFormError = isUpdateFormEmpty
+      ? 'There are empty fields, please adjust them properly.'
+      : hasUpdateErrors
+      ? 'There are incorrect fields, please adjust them properly.'
+      : ''
+
+  setUpdateErrors((prev) => ({
+      ...prev, updateForm: updateFormError
+  }))
+
+}, [updateData, isUpdateFormDefault, updateSuccess])
+
+
+const handleUpdateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+  e.preventDefault()
+
+  const isUpdateFormEmpty =
+      !(updateData.firstname?.trim()) ||
+      !(updateData.lastname?.trim()) ||
+      !(updateData.role?.trim())
+
+  const hasUpdateErrors =
+      updateErrors.firstname ||
+      updateErrors.lastname ||
+      updateErrors.role
+
+
+  const updateFormError = isUpdateFormEmpty
+      ? 'There are empty fields, please adjust them properly.'
+      : hasUpdateErrors
+      ? 'There are incorrect fields, please adjust them properly.'
+      : ''
+
+  setUpdateErrors((prev) => ({ ...prev, updateForm: updateFormError }))
+      if (updateFormError) {
+      setUpdateSuccess(false)
+      return
+  }
+
+  if (!updateFormError) {
+
+      setIsUpdating(true)
+
+      try {
+
+        const firstname = updateData.firstname
+        const lastname = updateData.lastname
+        const role = updateData.role
+        const authId = userDetails.auth_id
+
+        const { data: updatedUser, error: updateError } = await supabase
+                .from('users')
+                .update({
+                    firstname: firstname,
+                    lastname: lastname,
+                    role: role,
+                    updated_at: new Date()
+                })
+                .eq('auth_id', authId)
+                .select('firstname, lastname, role')
+
+                if (updatedUser) {
+                  setUpdateSuccess("Your information has been updated successfully.")
+
+                  setIsUpdateFormDefault(false)
+                  setIsUpdating(false)
+
+                  setUpdateData({
+                      firstname: '',
+                      lastname: '',
+                      role: ''
+                  })
+              }
+        
+    } catch (error) {
+      setUpdateErrors((prev) => ({
+        ...prev,
+        updateForm: "An unexpected error occurred. Please try again later.",
+      }))
+      setIsUpdating(false)
+    }
+  
+  }
+
+}
+
 useEffect(() => {
 
   if (!isSignupFormDefault || signupSuccess) 
@@ -141,6 +312,7 @@ useEffect(() => {
       errors.email ||
       errors.password ||
       errors.confirmpassword
+
 
   const signupFormError = isSignupFormEmpty
       ? 'There are empty fields, please adjust them properly.'
@@ -208,7 +380,7 @@ const handleSignupSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       errors.email ||
       errors.password ||
       errors.confirmpassword
-
+      
   const signupFormError = isSignupFormEmpty
       ? 'There are empty fields, please adjust them properly.'
       : hasSignupErrors
@@ -298,12 +470,12 @@ const handleSignOut = async () => {
   } finally {
       setTimeout(() => 
           setIsSigningOut(false), 1000
-      )    
+      ) 
   }
 
 }
 
-//latest signout push
+
 
 const overlayStyle: React.CSSProperties = {
   position: "fixed",
@@ -431,13 +603,6 @@ const handleLogin2 = () => {
   window.open(loginUrl, "_blank");
 };
 
-  const {
-    loading,
-    user,
-    userDetails
-  } = supabaseSession()
-
-
   if (loading) {
     return (
       <div><Wrapper variant="farm">
@@ -559,12 +724,12 @@ const handleLogin2 = () => {
           Waste Revalued
           </h1>
           <div className="space-y-2">
-            <div onClick={handleLogin}>
+            <div>
               <Button
                 primary
                 desc={<span className="text-white text-2xl system md:block hidden">&rarr;</span>}
                 icon="/assets/icon/snapshot.svg">
-                Open/Create Wallet 
+                Sign In
               </Button>
             </div>
             <div onClick={handleLogin2}>
@@ -720,36 +885,124 @@ const handleLogin2 = () => {
       <div style={settings}>
 
       <svg onClick={toggleSignOutForm} className="flex-none cursor-pointer stroke-gray-900" width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M2 10.2969V13.7031C2 14.1734 2.38209 14.5546 2.85343 14.5546C5.13807 14.5546 6.56533 17.0329 5.43635 19.0191C5.20068 19.4264 5.34054 19.9472 5.74873 20.1824L8.7051 21.8855C9.11329 22.1206 9.63524 21.9811 9.87091 21.5738C11.0151 19.5963 13.878 19.6055 15.0375 21.5741C15.2731 21.9814 15.7951 22.1209 16.2033 21.8858L19.1596 20.1827C19.5678 19.9475 19.7077 19.4267 19.472 19.0194C18.3432 17.0329 19.7708 14.5546 22.0557 14.5546C22.527 14.5546 22.9091 14.1734 22.9091 13.7031V10.2969C22.9091 9.82661 22.527 9.44536 22.0557 9.44536C19.771 9.44536 18.3438 6.96706 19.4727 4.98087C19.7084 4.57358 19.5686 4.05278 19.1604 3.81763L16.204 2.11454C15.7958 1.87939 15.2738 2.01894 15.0382 2.42623C13.8786 4.39479 11.0159 4.40344 9.87163 2.42592C9.63596 2.01863 9.11401 1.87908 8.70582 2.11423L5.74944 3.81732C5.34125 4.05247 5.2014 4.57327 5.43707 4.98056C6.56584 6.96709 5.13826 9.44536 2.85343 9.44536C2.38209 9.44536 2 9.82661 2 10.2969Z" stroke="currentColor" stroke-width="1.2"></path>
+        <path d="M2 10.2969V13.7031C2 14.1734 2.38209 14.5546 2.85343 14.5546C5.13807 14.5546 6.56533 17.0329 5.43635 19.0191C5.20068 19.4264 5.34054 19.9472 5.74873 20.1824L8.7051 21.8855C9.11329 22.1206 9.63524 21.9811 9.87091 21.5738C11.0151 19.5963 13.878 19.6055 15.0375 21.5741C15.2731 21.9814 15.7951 22.1209 16.2033 21.8858L19.1596 20.1827C19.5678 19.9475 19.7077 19.4267 19.472 19.0194C18.3432 17.0329 19.7708 14.5546 22.0557 14.5546C22.527 14.5546 22.9091 14.1734 22.9091 13.7031V10.2969C22.9091 9.82661 22.527 9.44536 22.0557 9.44536C19.771 9.44536 18.3438 6.96706 19.4727 4.98087C19.7084 4.57358 19.5686 4.05278 19.1604 3.81763L16.204 2.11454C15.7958 1.87939 15.2738 2.01894 15.0382 2.42623C13.8786 4.39479 11.0159 4.40344 9.87163 2.42592C9.63596 2.01863 9.11401 1.87908 8.70582 2.11423L5.74944 3.81732C5.34125 4.05247 5.2014 4.57327 5.43707 4.98056C6.56584 6.96709 5.13826 9.44536 2.85343 9.44536C2.38209 9.44536 2 9.82661 2 10.2969Z" stroke="currentColor" strokeWidth="1.2"></path>
         <path d="M15.6364 11.5455C15.6364 13.3027 14.2118 14.7273 12.4545 14.7273C10.6973 14.7273 9.27273 13.3027 9.27273 11.5455C9.27273 9.78819 10.6973 8.36364 12.4545 8.36364C14.2118 8.36364 15.6364 9.78819 15.6364 11.5455Z" stroke="currentColor" stroke-width="1.2"></path>
       </svg>
 
     </div>
 
 
-    <div onClick={showsignOutForm} style={signout}>Sign Out</div>
+    <div onClick={showsignOutForm} style={signout} className="hover:bg-[#582222]">Sign Out</div>
 
-      <div className="flex flex-col align-center bg-green-900 font-normal shadow-md rounded px-8 pt-10 pb-10 m-5">
-        <span className="flex flex-row mb-3 text-base">Firstname: <p className="ml-2 mb-3 text-base">{userDetails?.firstname || 'No Firstname'}</p></span>
-        <span className="flex flex-row mb-3 text-base">Lastname: <p className="ml-2 mb-3 text-base">{userDetails?.lastname || 'No Lastname'}</p></span>
-        <span className="flex flex-row mb-3 text-base">Role: <p className="ml-2 mb-3 text-base">{userDetails?.role || 'No Role'}</p></span>
+      <div className="flex flex-col align-center bg-green-900 font-normal shadow-md rounded px-8 pt-5 pb-10 m-5">
+        <h2 className="flex align-center justify-center text-3xl text-gray-100 mb-5">Profile Information</h2>
+          <div className="relative text-gray-500 focus-within:text-gray-900 mt-5 mb-5">
+            <div className="absolute inset-y-0 left-0 flex items-center px-3 rounded-l-lg border-gray-300 pointer-events-none bg-gray-200">
+            <svg className="stroke-gray-500" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" strokeWidth="1.6" className="my-path"></path>
+              <path d="M11.9998 14C9.15153 14 6.65091 15.3024 5.23341 17.2638C4.48341 18.3016 4.10841 18.8204 4.6654 19.9102C5.2224 21 6.1482 21 7.99981 21H15.9998C17.8514 21 18.7772 21 19.3342 19.9102C19.8912 18.8204 19.5162 18.3016 18.7662 17.2638C17.3487 15.3024 14.8481 14 11.9998 14Z" stroke="currentColor" strokeWidth="1.6" className="my-path"></path>
+            </svg>
+            </div>
+            <input type="text" id="default-search" className="block w-full h-11 pr-5 pl-14 py-2.5 text-base font-normal shadow-xs text-gray-200 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none" placeholder="Firstname" value={userDetails?.firstname || 'No Firstname'} disabled/>
+          </div>
+
+          <div className="relative text-gray-500 focus-within:text-gray-900 mb-5">
+            <div className="absolute inset-y-0 left-0 flex items-center px-3 rounded-l-lg border-gray-300 border-l pointer-events-none bg-gray-200">
+            <svg className="stroke-gray-500" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" strokeWidth="1.6" className="my-path"></path>
+              <path d="M11.9998 14C9.15153 14 6.65091 15.3024 5.23341 17.2638C4.48341 18.3016 4.10841 18.8204 4.6654 19.9102C5.2224 21 6.1482 21 7.99981 21H15.9998C17.8514 21 18.7772 21 19.3342 19.9102C19.8912 18.8204 19.5162 18.3016 18.7662 17.2638C17.3487 15.3024 14.8481 14 11.9998 14Z" stroke="currentColor" strokeWidth="1.6" className="my-path"></path>
+            </svg>
+            </div>
+            <input type="text" id="default-search" className="block w-full h-11 pr-5 pl-14 py-2.5 text-base font-normal shadow-xs text-gray-200 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none" placeholder="Lastname" value={userDetails?.lastname || 'No Firstname'} disabled/>
+          </div>
+
+          <div className="relative text-gray-500 focus-within:text-gray-900 mb-5">
+            <div className="absolute inset-y-0 left-0 flex items-center px-3 rounded-l-lg border-gray-300 border-l pointer-events-none bg-gray-200">
+            <svg className="stroke-gray-500" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16.5 9C16.5 9.82843 15.8284 10.5 15 10.5C14.1716 10.5 13.5 9.82843 13.5 9C13.5 8.17157 14.1716 7.5 15 7.5C15.8284 7.5 16.5 8.17157 16.5 9Z" stroke="currentColor" strokeWidth="1.6" className="my-path"></path>
+              <path d="M9 16.5005L10.5 18.0003" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" className="my-path"></path>
+              <path d="M14.6776 15.6C18.1694 15.6 21 12.7794 21 9.3C21 5.82061 18.1694 3 14.6776 3C11.1858 3 8.35518 5.82061 8.35518 9.3C8.35518 9.7716 8.35518 10.0074 8.30595 10.1584C8.28678 10.2173 8.27393 10.2482 8.2458 10.3033C8.17356 10.4448 8.04222 10.5757 7.77953 10.8374L3.5883 15.0138C3.29805 15.303 3.15292 15.4476 3.07646 15.6318C3 15.8159 3 16.0208 3 16.4305V19C3 19.9428 3 20.4142 3.29289 20.7071C3.58579 21 4.05719 21 5 21H7.52195C7.93301 21 8.13854 21 8.32314 20.9231C8.50774 20.8462 8.65247 20.7003 8.94195 20.4084L13.1362 16.1796C13.399 15.9147 13.5304 15.7822 13.6729 15.7094C13.7272 15.6817 13.7578 15.6689 13.8157 15.6499C13.9677 15.6 14.2043 15.6 14.6776 15.6Z" stroke="currentColor" strokeWidth="1.6" className="my-path"></path>
+            </svg>
+            </div>
+            <input type="text" id="default-search" className="block w-full h-11 pr-5 pl-14 py-2.5 text-base font-normal shadow-xs text-gray-200 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none" placeholder="Role" value={userDetails?.role || 'No Role'} disabled/>
+          </div>
         {/*<span className="flex flex-row mb-3">Created at: <p className="ml-2">{new Date(userDetails?.created_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</p></span>*/}
-        <span className="flex flex-row mb-3 text-base">Location: <p className="ml-2 mb-3 text-base">{userDetails?.location || 'No Location'}</p></span>
 
-        <button onClick={showEditForm} type='button' className='mt-10 py-2.5 px-6 bg-sky-700 text-white rounded-lg cursor-pointer text-2xl text-center shadow-xs transition-all duration-500 hover:bg-sky-900'>Edit</button>
+        <button onClick={showEditForm} type='button' className='mt-5 py-2.5 px-6 bg-sky-700 text-white rounded-lg cursor-pointer text-2xl text-center shadow-xs transition-all duration-500 hover:bg-sky-900'>Edit</button>
       </div>
 
 
       <div style={editForm}>
         <div className="flex items-center justify-center min-h-screen transition-all duration-300 ease-in-out">
 
-          <form className="relative w-[380px] h-[480px] bg-[#dbd9d9] p-6 rounded-lg shadow-md" noValidate>
+          <form className="relative w-[380px] h-[540px] bg-[#2d4f31] p-6 border-gray-300 rounded-lg shadow-md" onSubmit={handleUpdateSubmit} noValidate>
+          <h2 className="flex align-center justify-center text-2xl text-gray-100 mt-0 mb-10">Edit Profile Information</h2>
+
           <div className="absolute flex items-center justify-center bg-[#e85151] top-3 right-3 text-white-500 rounded-lg shadow-md hover:bg-[#bf3737] text-4xl font-light cursor-pointer w-8 h-8 transition-all duration-300 ease-in-out" onClick={hideEditForm}>&times;</div>
 
-          </form> 
+            {updateErrors.firstname && (<span><p className="text-sm text-red-300">{updateErrors.firstname}</p></span>)}
+            <div className="relative text-gray-500 focus-within:text-gray-900 mb-5">
+            <div className="absolute inset-y-0 left-0 flex items-center px-3 rounded-l-lg border-gray-300 pointer-events-none bg-gray-200">
+            <svg className="stroke-gray-500" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" strokeWidth="1.6" className="my-path"></path>
+              <path d="M11.9998 14C9.15153 14 6.65091 15.3024 5.23341 17.2638C4.48341 18.3016 4.10841 18.8204 4.6654 19.9102C5.2224 21 6.1482 21 7.99981 21H15.9998C17.8514 21 18.7772 21 19.3342 19.9102C19.8912 18.8204 19.5162 18.3016 18.7662 17.2638C17.3487 15.3024 14.8481 14 11.9998 14Z" stroke="currentColor" strokeWidth="1.6" className="my-path"></path>
+            </svg>
+            </div>
+            <input type="text" id="default-search" className="block w-full h-11 pr-5 pl-14 py-2.5 text-base font-normal shadow-xs text-gray-200 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none" placeholder="Enter your Firstname" value={updateData.firstname ?? ''} onChange={(e) => handleUpdateInputChange('firstname', e.target.value)}/>
+            </div>
+            {updateErrors.lastname && (<span><p className="text-sm text-red-300">{updateErrors.lastname}</p></span>)}
+            <div className="relative text-gray-500 focus-within:text-gray-900 mb-5">
+            <div className="absolute inset-y-0 left-0 flex items-center px-3 rounded-l-lg border-gray-300 border-l pointer-events-none bg-gray-200">
+            <svg className="stroke-gray-500" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="currentColor" strokeWidth="1.6" className="my-path"></path>
+              <path d="M11.9998 14C9.15153 14 6.65091 15.3024 5.23341 17.2638C4.48341 18.3016 4.10841 18.8204 4.6654 19.9102C5.2224 21 6.1482 21 7.99981 21H15.9998C17.8514 21 18.7772 21 19.3342 19.9102C19.8912 18.8204 19.5162 18.3016 18.7662 17.2638C17.3487 15.3024 14.8481 14 11.9998 14Z" stroke="currentColor" strokeWidth="1.6" className="my-path"></path>
+            </svg>
+            </div>
+            <input type="text" id="default-search" className="block w-full h-11 pr-5 pl-14 py-2.5 text-base font-normal shadow-xs text-gray-200 bg-transparent border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none" placeholder="Enter your Lastname" value={updateData.lastname ?? ''} onChange={(e) => handleUpdateInputChange('lastname', e.target.value)}/>
+            </div>
+            <div className="relative text-gray-500 focus-within:text-gray-900 mb-5">
+              <label className="text-gray-300 mb-2.5">Role:</label>
+              {updateErrors.role && (<span><p className="text-sm text-red-300">{updateErrors.role}</p></span>)}
+            <div className="grid sm:grid-cols-2 mt-2.5 gap-2">
+              <div className="block">
+                <input type="radio" name="role" id="radio-in-form-1" className="hidden peer" value="Waste Collector" checked={updateData.role === "Waste Collector"} onChange={(e) => handleUpdateInputChange('role', e.target.value)} />
+                <label htmlFor="radio-in-form-1" className="flex p-3 block w-full bg-transparent border border-gray-400 text-sm text-gray-400 rounded-md text-sm cursor-pointer peer-checked:border-gray-100 peer-checked:text-gray-100 hover:border-gray-300 hover:text-gray-300 transition-all duration-500">
+                  Waste Collector
+                </label>
+              </div>
+              <div className="block">
+                <input type="radio" name="role" id="radio-in-form-2" className="hidden peer" value="Waste Buyer" checked={updateData.role === " Waste Buyer"} onChange={(e) => handleUpdateInputChange('role', e.target.value)} />
+                <label htmlFor="radio-in-form-2" className="flex p-3 block w-full bg-transparent border border-gray-400 text-sm text-gray-400 rounded-md text-sm cursor-pointer peer-checked:border-gray-100 peer-checked:text-gray-100 hover:border-gray-300 hover:text-gray-300 transition-all duration-500">
+                  Waste Buyer
+                </label>
+              </div>
+              <div className="block">
+                <input type="radio" name="role" id="radio-in-form-3" className="hidden peer" value="Investor" checked={updateData.role === "Investor"} onChange={(e) => handleUpdateInputChange('role', e.target.value)} />
+                <label htmlFor="radio-in-form-3" className="flex p-3 block w-full bg-transparent border border-gray-400 text-sm text-gray-400 rounded-md text-sm cursor-pointer peer-checked:border-gray-100 peer-checked:text-gray-100 hover:border-gray-300 hover:text-gray-300 transition-all duration-500">
+                  Investor
+                </label>
+              </div>
+            </div>            
+            </div>
+
+            {updateSuccess && (<span><p className="text-sm text-blue-300">{updateSuccess}</p></span>)}
+            {updateErrors.updateForm && (<span><p className="text-sm text-red-300">{updateErrors.updateForm}</p></span>)}
+            <div className="flex items-center justify-center">
+            <button type='submit' className='py-2 px-8 bg-sky-700 text-white rounded-lg cursor-pointer text-1xl text-center shadow-xs transition-all duration-500 hover:bg-sky-900' disabled={isUpdating}>{isUpdating ? ('Updating') : ('Update')}</button>
+            </div>
+            </form>
 
         </div>
       </div>
+
+          <div className="flex align-center justify-center mt-20" onClick={handleLogin}>
+              <Button
+                primary
+                desc={<span className="text-white text-2xl system md:block hidden">&rarr;</span>}
+                icon="/assets/icon/snapshot.svg">
+                Open/Create Wallet 
+              </Button>
+          </div>
 
 
       <div style={signoutForm}>
