@@ -177,7 +177,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
             <Button
               target="_blank"
               rel="noreferrer"
-              href="https://t.me/Waste2Earn"
+              href="https://x.com/waste2earn"
               icon="/assets/icon/X-logo.png"
               desc="Join the community">
               Twitter
