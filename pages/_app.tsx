@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import { NextPage } from 'next';
+import type { ReactNode } from 'react';
+import type { NextPage } from 'next';
 import Head from 'next/head';
 import type { AppProps } from 'next/app'
 import Script from 'next/script';
@@ -7,15 +7,19 @@ import Script from 'next/script';
 import '../styles/globals.css'
 
 type EnhancedAppProps = AppProps & {
-  Component: NextPage;
+  Component: React.ComponentType<any> & {
+    getLayout?: (page: ReactNode) => ReactNode;
+  };
 }
 
 function MyApp({ Component, pageProps }: EnhancedAppProps) {
   const getLayout = Component.getLayout || ((page: ReactNode) => page)
+  // @ts-ignore
+  const page = <Component {...pageProps} />;
 
   return getLayout(
     <>
-      <Component {...pageProps} />
+      {page}
       <Head>
         {/* Google Analytics */}
         <script dangerouslySetInnerHTML={{ __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
