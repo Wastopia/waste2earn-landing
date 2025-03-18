@@ -10,7 +10,7 @@ const Button : FC<{
   icon?: string | ReactElement,
   desc?: string | ReactElement,
   iconStyle?: any,
-  className?: string
+  className?: string,
 }> = ({
   children,
   primary = false,
@@ -19,6 +19,13 @@ const Button : FC<{
   icon = undefined,
   desc = undefined,
   ...props
+}: {
+  primary?: boolean;
+  secondary?: boolean;
+  tertiary?: boolean;
+  icon?: string | ReactElement;
+  desc?: string | ReactElement;
+  [key: string]: any;
 }) => (
   <a {...props}
   className={

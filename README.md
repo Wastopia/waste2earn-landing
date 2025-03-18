@@ -12,11 +12,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ## Getting Started
 
 First, run the development server:
-<<<<<<< HEAD
-<!-- Hello Everyone-->
-=======
-<!-- Hello World. -->
->>>>>>> ad1f3bbfaad0a623334482439a82911497090ead
+
 ```bash
 bun run dev
 # or
