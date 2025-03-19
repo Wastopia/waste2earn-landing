@@ -29,7 +29,7 @@ const Wrapper : FC<WrapperProps> = ({
       </div>
       <div className={styles.FarmImage}>
         <video autoPlay muted loop className={styles.videoElement}>
-        <source src="/assets/background.mp4" type="video/mp4" />
+        <source src="/assets/video.mp4" type="video/mp4" />
         </video>
       </div>
     </div>
