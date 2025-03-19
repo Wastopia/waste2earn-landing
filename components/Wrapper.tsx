@@ -14,7 +14,7 @@ const Wrapper : FC<WrapperProps> = ({
 }) => (
   // Side image variant
   variant === "farm" ? (
-    <div className="flex flex-row bg-gradient-to-br from-black via-green-900 to-blue-900 text-white">
+    <div className="flex flex-row bg-gradient-to-br from-black via-[#034951] to-blue-900 text-white">
       <div className={styles.TextContainer}>
         <div className="max-w-[720px] space-y-24 lg:pb-12">
           {/* Header */}
