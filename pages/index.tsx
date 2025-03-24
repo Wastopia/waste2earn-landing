@@ -101,7 +101,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
             <div onClick={handleLogin}>
               <Button
                 primary
-                desc={<span className="text-white text-2xl system md:block hidden">&rarr;</span>}
+                desc={<span className="text-white text-2xl system">&rarr;</span>}
                 icon="/assets/icon/snapshot.svg">
                 Open/Create Wallet 
               </Button>
@@ -139,7 +139,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
         <div className="space-y-4 text-black">
           <div className="flex justify-between items-center text-white">
             <h2 className="text-3xl font-normal">Learn</h2>
-            <a href={`https://waste2earn.xyz`}><p className="text font-normal mr-4 text-blue-600">More &rarr;</p></a>
+            <a href={`https://waste2earn.xyz`}><p className="text font-normal mr-4 text-gray-200">More &rarr;</p></a>
           </div>
           <div className="space-y-4">
             <Button
@@ -191,7 +191,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
         <div className="space-y-4">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-3xl font-normal">Blog</h2>
-            <a href={`/blog`}><p className="text font-normal mr-4 text-blue-600">See all &rarr;</p></a>
+            <a href={`/blog`}><p className="text font-normal mr-4 text-gray-200">See all &rarr;</p></a>
           </div>
           <div className="flex flex-col space-y-4">
             {allPostsData.map(({ id, date, title, subtitle, image }) => (
@@ -212,7 +212,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-3xl font-normal">Links</h2>
-            <a href={`https://waste2earn.gitbook.io/waste2earn-documentation/`}><p className="text font-normal mr-4 text-blue-600">More &rarr;</p></a>
+            <a href={`https://waste2earn.gitbook.io/waste2earn-documentation/`}><p className="text font-normal mr-4 text-gray-200">More &rarr;</p></a>
           </div>
           <div className="space-y-4">
             <Button
