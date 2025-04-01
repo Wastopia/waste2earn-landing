@@ -1,10 +1,11 @@
 import Button from "../Buttons/Button"
+import Image from "next/image"
 
 const PokerBanner = () => (
   <div>
     <div className="flex flex-col space-y-4">
       <div className="max-w-sm">
-        <img src="/assets/poker/poker-1.png" />
+        <Image src="/assets/poker/poker-1.png" alt="Poker Tournament Banner" width={400} height={300} />
       </div>
       <div className="flex-1 space-y-4">
         <div>

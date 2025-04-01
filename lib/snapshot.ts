@@ -1,4 +1,3 @@
-import snapshot from '@snapshot-labs/snapshot.js';
 import axios from 'axios';
 
 export type Snapshot = {

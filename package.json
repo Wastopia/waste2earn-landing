@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@snapshot-labs/snapshot.js": "^0.1.2",
-    "axios": "^0.27.2",
+    "axios": "^1.8.4",
     "ethers": "^5.6.8",
     "gray-matter": "^4.0.3",
     "moment": "^2.29.1",
@@ -20,6 +20,7 @@
     "next-seo": "^5.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-icons": "^4.11.0",
     "rehype-raw": "^6.1.1",
     "rehype-sanitize": "^5.0.1",
     "rehype-stringify": "^9.0.3",
@@ -28,10 +29,13 @@
     "remark-rehype": "^10.1.0"
   },
   "devDependencies": {
+    "@swc/cli": "^0.6.0",
+    "@swc/core": "^1.11.16",
     "@tailwindcss/typography": "^0.5.2",
-    "@types/node": "17.0.17",
-    "@types/react": "17.0.39",
-    "@types/react-dom": "17.0.11",
+    "@types/babel__traverse": "^7.18.0",
+    "@types/node": "^17.0.17",
+    "@types/react": "^17.0.39",
+    "@types/react-dom": "^17.0.11",
     "autoprefixer": "^10.4.2",
     "eslint": "8.8.0",
     "eslint-config-next": "12.0.10",
@@ -39,6 +43,6 @@
     "next-sitemap": "^2.5.10",
     "postcss": "^8.4.6",
     "tailwindcss": "^3.0.22",
-    "typescript": "4.5.5"
+    "typescript": "^4.9.5"
   }
 }

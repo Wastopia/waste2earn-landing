@@ -26,21 +26,23 @@ function Error(props: any) {
               type: 'image/jpeg',
             }
           ],
-          site_name: 'Beanstalk',
+          site_name: 'Waste2Earn',
         }}
         twitter={{
-          handle: '@beanstalkfarms',
+          handle: '@waste2earn',
           cardType: 'summary_large_image',
-          site: '@beanstalkfarms'
+          site: '@waste2earn'
         }}
       />
       <Wrapper variant="farm">
         <div className="space-y-4">
           <h1 className="text-4xl">Page not found.</h1>
           <Link href="/">
-            <Button>
-              &larr; Return home
-            </Button>
+            <a>
+              <Button>
+                &larr; Return home
+              </Button>
+            </a>
           </Link>
         </div>
       </Wrapper>

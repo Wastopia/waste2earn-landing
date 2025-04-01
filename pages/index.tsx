@@ -1,14 +1,19 @@
-import type { GetStaticPropsResult, NextPage } from 'next'
+import type { NextPage } from 'next'
 import Link from 'next/link';
 import { NextSeo } from 'next-seo';
-// import '../styles/style.css';
+import Image from 'next/image';
 import Button from '../components/Buttons/Button';
 import PostButton from '../components/Buttons/PostButton';
 import Wrapper from '../components/Wrapper';
 import {getSortedPostsData, PostData} from "../lib/posts";
 import { COPY, IMAGES, SITE_URL } from '../lib/constants';
 import {loadActiveProposals, Proposal} from '../lib/snapshot';
-// import '../styles/logo.css'
+import NFTDavaoIcon from '../public/assets/icon/nftdavao.png';
+import DCTIcon from '../public/assets/icon/dct.png';
+import RerdaoIcon from '../public/assets/icon/rerdao.png';
+import ICPPHIcon from '../public/assets/icon/icp-ph.png';
+import CoreIcon from '../public/assets/icon/core-logo.png';
+
 
 type BlogProps = {
   allPostsData: PostData[];
@@ -82,7 +87,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
                   (proposal.end < new Date().getTime()) && (
                     <div key={proposal.id}>
                       <a href={`https://waste2earn.xyz/governance/${proposal.id}`} target="_blank" rel="noreferrer" className="flex flex-row items-center px-2 py-4 space-x-4">
-                        <img src="/assets/icon/snapshot.svg" className="h-6" />
+                        <Image src="/assets/icon/snapshot.svg" alt="Snapshot icon" width={24} height={24} className="h-6" />
                         <span className="flex-1">
                           <span className="font-bold">{proposal.title}</span> is live for voting
                         </span>
@@ -103,7 +108,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
                 primary
                 desc={<span className="text-white text-2xl system">&rarr;</span>}
                 icon="/assets/icon/snapshot.svg">
-                Open/Create Wallet 
+                Launch App
               </Button>
             </div>
             <div onClick={handleLogin2}>
@@ -112,19 +117,19 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
                 // className="hover-walk"
                 desc={<span className="text-white text-2xl system md:block hidden">&rarr;</span>}
                 icon="/assets/icon/wasticon.svg">
-                Was2pia CoreGame 
+                Play 
               </Button>
             </div>
             <div className="md:flex md:flex-row md:space-y-0 space-y-2 md:space-x-2 items-stretch text-black">
               <div className="flex-1">
-                <Link href="/blog/waste-token">
+                <Link href="/blog/waste-token" passHref>
                   <Button className="align-flex-start" icon={<></>}>
                     Buy $Waste Token 
                   </Button>
                 </Link>
               </div>
               <div>
-                <Link href="/blog/path-forward-faq">
+                <Link href="/blog/path-forward-faq" passHref>
                   <Button className="h-full flex items-center">
                     FAQ
                   </Button>
@@ -250,7 +255,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
               {/* First 5 Images */}
               <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
                 <a href="https://v3.tailwindcss.com/docs/text-color" target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-                  <img src="./Picture/dct.png" alt="Picture 1" className="w-full h-full object-cover"/>
+                  <Image src={DCTIcon} alt="Picture 1" className="object-cover" width={144} height={144} />
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
                     DCT
                   </div>
@@ -259,7 +264,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
 
               <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
                 <a href="/" target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-                  <img src="./Picture/rerdao.png" alt="Picture 2" className="w-full h-full object-cover"/>
+                  <Image src={RerdaoIcon} alt="Picture 2" className="object-cover" width={144} height={144}/>
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
                     RERDAO
                   </div>
@@ -268,7 +273,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
 
               <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
                 <a href="/" target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-                  <img src="./Picture/nftdavao.png" alt="Picture 3" className="w-full h-full object-cover"/>
+                  <Image src={NFTDavaoIcon} alt="Picture 3" className="object-cover" width={144} height={144} />
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
                     NFTDAVAO
                   </div>
@@ -277,7 +282,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
 
               <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
                 <a href="/" target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-                  <img src="./Picture/icp-ph.png" alt="Picture 4" className="w-full h-full object-cover"/>
+                  <Image src={ICPPHIcon} alt="Picture 4" className="object-cover" width={144} height={144}/>
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
                     ICP-PH
                   </div>
@@ -286,7 +291,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
 
               <div className="relative w-36 h-36 overflow-hidden rounded-full shadow-lg shadow-gray-400 transition-transform duration-300 hover:scale-105">
                 <a href="/" target="_blank" rel="noopener noreferrer" className="block w-full h-full">
-                  <img src="./Picture/core-logo.png" alt="Picture 5" className="w-full h-full object-cover"/>
+                  <Image src={CoreIcon} alt="Picture 5" className="object-cover" width={144} height={144}/>
                   <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white text-sm font-semibold opacity-0 transition-opacity duration-300 hover:opacity-100">
                     CORE
                   </div>

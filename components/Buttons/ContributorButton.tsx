@@ -1,4 +1,5 @@
 import { FC } from "react";
+import Image from "next/image";
 
 const ContributorButton : FC<{
   href: string,
@@ -6,7 +7,7 @@ const ContributorButton : FC<{
   name: string,
 }> = ({
   children,
-  avatar = undefined,
+  avatar = "/assets/icon/default-avatar.png",
   name = undefined,
   ...props
 }) => (
@@ -21,7 +22,13 @@ const ContributorButton : FC<{
     bg-white
   `}>
     <div className="sm:flex sm:flex-row block items-center sm:space-x-3 sm:space-y-0 space-y-2">
-      <img src={avatar} className="h-6 w-6 rounded-full" />
+      <Image 
+        src={avatar} 
+        alt={`${name || 'Contributor'} avatar`}
+        width={24}
+        height={24}
+        className="rounded-full" 
+      />
       <div className="text-xl">{children}</div>
     </div>
     <div className="font-light text-gray-600 text-[17px]">
