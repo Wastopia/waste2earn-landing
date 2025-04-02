@@ -1,6 +1,5 @@
 import React from 'react';
-import { FaDiscord, FaFacebook, FaGithub } from 'react-icons/fa';
-import { FaXTwitter } from 'react-icons/fa6';
+import { FaFacebook, FaGithub, FaXTwitter, FaDiscord } from 'react-icons/fa6';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -18,7 +17,7 @@ const Footer = () => {
           </div>
           
           <div className="flex space-x-4">
-            <a href="https://x.com/waste2earn" aria-label="Twitter" className="text-gray-400 hover:text-white">
+            <a href="https://x.com/waste2earn" aria-label="XTwitter" className="text-gray-400 hover:text-white">
               <FaXTwitter className="w-5 h-5" />
             </a>
             <a href="https://discord.gg/W7bFg6J98q" aria-label="Discord" className="text-gray-400 hover:text-white">

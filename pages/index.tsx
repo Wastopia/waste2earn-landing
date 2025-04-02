@@ -13,7 +13,7 @@ import DCTIcon from '../public/assets/icon/dct.png';
 import RerdaoIcon from '../public/assets/icon/rerdao.png';
 import ICPPHIcon from '../public/assets/icon/icp-ph.png';
 import CoreIcon from '../public/assets/icon/core-logo.png';
-
+import ChatWidget from '../components/ChatWidget';
 
 type BlogProps = {
   allPostsData: PostData[];
@@ -300,7 +300,7 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
             </div>
           </div>
         </div>
-
+        <ChatWidget />
       </Wrapper>
     </>
   )
