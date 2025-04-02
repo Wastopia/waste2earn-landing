@@ -47,9 +47,9 @@ const Home: NextPage<BlogProps> = ({ allPostsData }) => {
           site_name: 'Waste2Earn',
         }}
         twitter={{
-          handle: '@Waste2Earnfarms',
+          handle: '@Waste2Earn',
           cardType: 'summary_large_image',
-          site: '@Waste2Earnfarms'
+          site: '@Waste2Earn'
         }}
       />
       <Wrapper variant="farm">

@@ -150,10 +150,10 @@ const Home: NextPage<BlogProps> = ({ allPostsData, activeProposals }: BlogProps)
             <Button
               target="_blank"
               rel="noreferrer"
-              href="https://waste2earn.gitbook.io/waste2earn-documentation/"
+              href="https://take-a-quiz-nine.vercel.app/"
               icon="/assets/icon/w2e.svg"
-              desc="1.0">
-              Whitepaper
+              desc="Earn $Waste soon">
+              Take a Quiz
             </Button>
             <Button
               target="_blank"
