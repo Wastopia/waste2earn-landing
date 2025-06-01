@@ -1,6 +1,6 @@
 <img src="https://github.com/Wastopia/waste2earn-landing/blob/main/public/assets/logo-150.png" alt="W2e-logo" align="right" width="105" />
 
-# Waste2Earn UI Landing Page
+# WasteEarn UI Landing Page
 
 The Waste2Earn landing page hosted at [waste2earn.xyz](https://waste2earn.xyz).
 Open and Create Wallet at [ICRC Waste2Esarn Wallet](https://hm7ne-saaaa-aaaao-qezaq-cai.icp0.io/)
